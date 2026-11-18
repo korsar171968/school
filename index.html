@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тайны мангового гиганта: Интерактивная лаборатория</title>
+    <style>
+        /* Базовый тропический стиль */
+        body {
+            margin: 0;
+            padding: 0 0 50px 0;
+            background: linear-gradient(135deg, #fff8e7 0%, #ffe6b8 50%, #ffd59e 100%);
+            color: #3d2b1f;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Декоративные солнечные блики на фоне */
+        .mango-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(65px);
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .glow-a { width: 350px; height: 350px; background: #ffb703; top: -60px; left: -60px; }
+        .glow-b { width: 400px; height: 400px; background: #8ac926; bottom: 5%; right: -80px; opacity: 0.25; }
+
+        /* Тропические разделители между блоками */
+        .mango-separator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin: 28px 0;
+            font-size: 22px;
+            user-select: none;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Контейнер блоков и карточки */
+        .lab-block {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .lab-card {
+            background: rgba(255, 253, 249, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid #f4c07a;
+            border-radius: 28px;
+            padding: 32px 26px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 12px 32px rgba(180, 100, 20, 0.12);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lab-card h1 {
+            color: #d95d1e;
+            font-size: 26px;
+            margin: 0 0 14px 0;
+            text-shadow: 1px 1px 0 #ffffff;
+        }
+
+        .lab-card h2 {
+            color: #2b7a3d;
+            font-size: 22px;
+            margin: 0 0 18px 0;
+        }
+
+        /* Плашки с фактами на главном экране */
+        .hero-facts-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin-top: 16px;
+        }
+        .fact-pill {
+            background: #fff4df;
+            border: 1.5px solid #f4c07a;
+            border-radius: 16px;
+            padding: 12px 8px;
+            font-size: 13px;
+            color: #5c3d24;
+        }
+        .fact-pill strong {
+            display: block;
+            font-size: 18px;
+            color: #d95d1e;
+            margin-bottom: 4px;
+        }
+
+        /* Рамки-инструкции (будут только в Блоке 5 и Блоке 6) */
+        .instruction-box {
+            color: #4a3525;
+            font-size: 14px;
+            line-height: 1.6;
+            background: #fff6e5;
+            padding: 14px 18px;
+            border-radius: 16px;
+            border: 1.5px dashed #e08e36;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+        }
+
+        /* Стили Блока 2: Машина времени */
+        .timeline-scene {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(to bottom, #e0f7fa 0%, #e8f5e9 78%, #8d6e63 78%, #6d4c41 100%);
+            border-radius: 22px;
+            border: 2px solid #c5e1a5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            overflow: hidden;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .timeline-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .time-btn {
+            background: #ffffff;
+            border: 1.5px solid #81c784;
+            padding: 8px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #2b7a3d;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .time-btn:hover, .time-btn.active-time {
+            background: #2b7a3d;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .era-fact-card {
+            background: #f1f8e9;
+            border: 1.5px solid #aed581;
+            border-radius: 16px;
+            padding: 14px 18px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 14px;
+            line-height: 1.55;
+            color: #334d2b;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mango-glow glow-a"></div>
+    <div class="mango-glow glow-b"></div>
+
+    <!-- ==================== БЛОК 1: ВВОДНЫЙ ЭКРАН ==================== -->
+    <div class="lab-block">
+        <div class="lab-card">
+            <h1>🥭 Манговое дерево (Mangifera indica)</h1>
+            <p style="font-size: 15px; line-height: 1.6; color: #5c3d24; margin: 0;">
+                Добро пожаловать в интерактивную ботаническую лабораторию 5 класса! Изучите тайны тропического великана, проверьте смекалку и примите решения всей командой.
+            </p>
+            <div class="hero-facts-row">
+                <div class="fact-pill"><strong>до 300 лет</strong>живёт и плодоносит</div>
+                <div class="fact-pill"><strong>до 40 м</strong>высота взрослого гиганта</div>
+                <div class="fact-pill"><strong>Фисташки</strong>близкие родственники</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mango-separator"><span>✨</span><span>🥭</span><span>✨</span><span>🌿</span><span>✨</span><span>🌞</span><span>✨</span></div>
+
+    <!-- ==================== БЛОК 2: МАШИНА ВРЕМЕНИ ==================== -->
+    <div class="lab-block">
+        <div class="lab-card">
+            <h2>⏳ Машина времени: От косточки до гиганта</h2>
+            
+            <div class="timeline-scene">
+                <svg id="timeline-tree-svg" viewBox="0 0 260 200" width="260" height="200">
+                    <!-- Сюда JS будет подставлять стадии роста дерева -->
+                    <ellipse cx="130" cy="175" rx="14" ry="8" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2"/>
+                    <path d="M 130 183 Q 128 192 132 198" stroke="#fff9c4" stroke-width="3" fill="none"/>
+                </svg>
+            </div>
+
+            <div class="timeline-btns">
+                <button class="time-btn active-time" onclick="setTreeEra(0, this)">1 неделя</button>
+                <button class="time-btn" onclick="setTreeEra(1, this)">3 месяца</button>
+                <button class="time-btn" onclick="setTreeEra(2, this)">2 года</button>
+                <button class="time-btn" onclick="setTreeEra(3, this)">6 лет</button>
+                <button class="time-btn" onclick="setTreeEra(4, this)">15 лет</button>
+                <button class="time-btn" onclick="setTreeEra(5, this)">100+ лет</button>
+            </div>
+
+            <div id="era-fact-box" class="era-fact-card">
+                <strong>🌱 1 неделя (Пробуждение косточки):</strong> Из крупной плоской косточки первым делом пробивается мощный стержневой корень. Он уходит глубоко в почву, чтобы закрепить будущий гигант и добывать воду.
+            </div>
+        </div>
+    </div>
+    <div class="mango-separator"><span>✨</span><span>🥭</span><span>✨</span><span>🌿</span><span>✨</span><span>🌞</span><span>✨</span></div>
+
+       <!-- ==================== БЛОК 3: СРАВНИТЕЛЬ ГИГАНТОВ ==================== -->
+    <div class="lab-block">
+        <div class="lab-card">
+            <h2>📏 Сравнитель гигантов: Кто выше всех?</h2>
+
+            <!-- Облачко смешных реплик мангового дерева -->
+            <div id="mango-speech-bubble" class="tree-speech-bubble">
+                «Я — могучее манговое дерево высотой 40 метров! Ну-ка, кто осмелится встать рядом со мной?» 😎🌳
+            </div>
+
+            <!-- Сцена сравнения высоты с землёй, травой и красивым SVG-деревом -->
+            <div class="giants-stage">
+                <!-- Слева всегда стоит аккуратно нарисованное манговое дерево (40 м) -->
+                <div class="giant-column">
+                    <span class="height-tag">40 м</span>
+                    <div id="mango-character" class="mango-tree-actor">
+                        <svg viewBox="0 0 120 130" width="95" height="102" style="overflow: visible;">
+                            <!-- Корни и ствол с текстурой коры -->
+                            <path d="M 48 126 Q 53 100 54 72 L 66 72 Q 67 100 72 126 Z" fill="#6d4c41" stroke="#4e342e" stroke-width="2"/>
+                            <path d="M 58 85 L 58 118 M 62 92 L 62 122" stroke="#4e342e" stroke-width="1.5" stroke-linecap="round"/>
+                            <!-- Многослойная пышная крона -->
+                            <circle cx="38" cy="58" r="24" fill="#2e7d32"/>
+                            <circle cx="82" cy="58" r="24" fill="#2e7d32"/>
+                            <circle cx="60" cy="36" r="28" fill="#388e3c"/>
+                            <circle cx="44" cy="46" r="22" fill="#43a047"/>
+                            <circle cx="76" cy="46" r="22" fill="#43a047"/>
+                            <!-- Аккуратные плоды манго в листве -->
+                            <ellipse cx="34" cy="64" rx="4" ry="5.5" fill="#ffb703" stroke="#e65100" stroke-width="1"/>
+                            <ellipse cx="86" cy="62" rx="4" ry="5.5" fill="#fb8500" stroke="#e65100" stroke-width="1"/>
+                            <ellipse cx="60" cy="24" rx="4" ry="5.5" fill="#ffb703" stroke="#e65100" stroke-width="1"/>
+                            <!-- Аккуратные глазки и ротик персонажа на кроне -->
+                            <circle cx="51" cy="48" r="3.5" fill="#ffffff"/>
+                            <circle cx="69" cy="48" r="3.5" fill="#ffffff"/>
+                            <circle id="mango-pupil-l" cx="52" cy="48" r="1.8" fill="#1b1b1b"/>
+                            <circle id="mango-pupil-r" cx="70" cy="48" r="1.8" fill="#1b1b1b"/>
+                            <path id="mango-mouth" d="M 54 57 Q 60 63 66 57" stroke="#1b1b1b" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="actor-name">Манговое дерево</span>
+                </div>
+
+                <!-- Справа появляется выбранный соперник -->
+                <div class="giant-column">
+                    <span id="rival-height-tag" class="height-tag" style="opacity: 0;">0 м</span>
+                    <div id="rival-visual-box" class="rival-actor-slot"></div>
+                    <span id="rival-name-tag" class="actor-name">Выбери ниже</span>
+                </div>
+
+                <!-- Полоса земли с травой -->
+                <div class="ground-grass-strip"></div>
+            </div>
+
+            <!-- Кнопки выбора для сравнения -->
+            <div class="giants-btns-row">
+                <button class="time-btn" onclick="compareWithGiant('boy')">👦 Пятиклассник (1,5 м)</button>
+                <button class="time-btn" onclick="compareWithGiant('apple')">🍎 Яблоня (5 м)</button>
+                <button class="time-btn" onclick="compareWithGiant('birch')">🌳 Берёза (20 м)</button>
+                <button class="time-btn" onclick="compareWithGiant('sequoia')">🌲 Секвойя (100 м)</button>
+                <button class="time-btn" onclick="compareWithGiant('skyscraper')">🏙️ Небоскрёб (150 м)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mango-separator"><span>✨</span><span>🥭</span><span>✨</span><span>🌿</span><span>✨</span><span>🌞</span><span>✨</span></div>
+
+    <!-- ==================== БЛОК 4: ЦВЕТОВОЙ КАЛЕЙДОСКОП СОРТОВ ==================== -->
+    <div class="lab-block">
+        <div class="lab-card">
+            <h2>🎨 Цветовой калейдоскоп сортов манго</h2>
+
+            <div class="kaleidoscope-layout">
+                <!-- Цветовой круг сортов -->
+                <div class="color-wheel-container">
+                    <div class="color-wheel-disc">
+                        <button class="wheel-sector sec-purple" onclick="pickMangoColor('purple')" title="Фиолетовый сорт">Фиолет</button>
+                        <button class="wheel-sector sec-yellow" onclick="pickMangoColor('yellow')" title="Лимонный сорт">Жёлтый</button>
+                        <button class="wheel-sector sec-green" onclick="pickMangoColor('green')" title="Изумрудный сорт">Зелёный</button>
+                        <button class="wheel-sector sec-red" onclick="pickMangoColor('red')" title="Алый сорт">Красный</button>
+                        <button class="wheel-sector sec-orange" onclick="pickMangoColor('orange')" title="Медовый сорт">Оранж</button>
+                    </div>
+                </div>
+
+                <!-- Интерактивный плод (кликаешь — разрезается пополам!) -->
+                <div class="fruit-inspection-zone">
+                    <div id="interactive-mango-fruit" class="mango-fruit-card" onclick="sliceMangoFruit()">
+                        <div id="mango-svg-holder">
+                            <svg viewBox="0 0 140 140" width="120" height="120">
+                                <path d="M 70 15 C 110 15, 125 65, 105 105 C 88 135, 45 130, 35 95 C 25 60, 40 15, 70 15 Z" fill="#ffb703" stroke="#d95d1e" stroke-width="3"/>
+                                <path d="M 70 15 Q 75 5 85 8" stroke="#2b7a3d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="click-slice-hint">🔪 Нажми на плод, чтобы разрезать!</span>
+                    </div>
+
+                    <div id="sort-fact-panel" class="era-fact-card" style="margin-top: 12px;">
+                        <strong>🥭 Выбери любой цвет на круге!</strong> Нажми на сектор палитры, чтобы увидеть редкий сорт манго, а затем кликни по самому плоду для разреза.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- СТИЛИ ДЛЯ БЛОКА 3 И БЛОКА 4 -->
+    <style>
+        /* Блок 3: Сравнитель гигантов */
+        .tree-speech-bubble {
+            background: #ffffff;
+            border: 2px solid #2b7a3d;
+            border-radius: 18px;
+            padding: 12px 18px;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #2b4c32;
+            margin-bottom: 18px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 12px rgba(43, 122, 61, 0.12);
+            transition: all 0.25s ease;
+        }
+        .giants-stage {
+            width: 100%;
+            height: 230px;
+            background: linear-gradient(to bottom, #dff4ff 0%, #f1f8e9 82%, #7cb342 82%, #6d4c41 87%, #5d4037 100%);
+            border-radius: 20px;
+            border: 2px solid #c5e1a5;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding: 10px 20px 26px 20px;
+            box-sizing: border-box;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .ground-grass-strip {
+            position: absolute;
+            bottom: 34px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: repeating-linear-gradient(90deg, #558b2f 0px, #7cb342 12px, #33691e 24px);
+            opacity: 0.7;
+        }
+        .giant-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            width: 45%;
+            z-index: 3;
+        }
+        .height-tag {
+            background: #3d2b1f;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 9px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+        }
+        .actor-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #4a3525;
+            margin-top: 4px;
+            background: rgba(255,255,255,0.9);
+            padding: 2px 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .mango-tree-actor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        .mango-tree-actor.scared-shake {
+            animation: treeShiver 0.3s infinite alternate;
+        }
+        @keyframes treeShiver {
+            from { transform: translateX(-3px) rotate(-2deg); }
+            to { transform: translateX(3px) rotate(2deg); }
+        }
+        .rival-actor-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            transition: all 0.3s ease;
+        }
+        .giants-btns-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        /* Блок 4: Цветовой круг сортов */
+        .kaleidoscope-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 16px;
+        }
+        .color-wheel-disc {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            background: #fff4df;
+            padding: 14px;
+            border-radius: 50px;
+            border: 2px dashed #f4c07a;
+        }
+        .wheel-sector {
+            border: 2.5px solid #ffffff;
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 12.5px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+            transition: transform 0.2s ease;
+        }
+        .wheel-sector:hover { transform: scale(1.1); }
+        .sec-purple { background: #7b2cbf; color: #ffffff; }
+        .sec-yellow { background: #ffd166; color: #4a3525; }
+        .sec-green { background: #52b788; color: #ffffff; }
+        .sec-red { background: #e63946; color: #ffffff; }
+        .sec-orange { background: #f77f00; color: #ffffff; }
+
+        .fruit-inspection-zone {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .mango-fruit-card {
+            background: #ffffff;
+            border: 2px solid #f4c07a;
+            border-radius: 22px;
+            padding: 14px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .mango-fruit-card:hover { transform: scale(1.04); }
+        .click-slice-hint {
+            font-size: 12px;
+            font-weight: bold;
+            color: #d95d1e;
+            margin-top: 6px;
+        }
+    </style>
+    <div class="mango-separator"><span>✨</span><span>🥭</span><span>✨</span><span>🌿</span><span>✨</span><span>🌞</span><span>✨</span></div>
+
+    <!-- ==================== БЛОК 5: РЕБУС И ТРОПИЧЕСКИЙ ТЕЛЕФОН ==================== -->
+    <div class="lab-block">
+        <div class="lab-card">
+            <h2>☎️ Шифр ботаника: Звонок в тропики</h2>
+
+            <div class="instruction-box">
+                📜 Инструкция:<br>
+                1) Сначала всем классом решите ботанический ребус-загадку, чтобы получить <strong>5-значный секретный номер</strong>, и нажмите «Перейти к телефону».<br>
+                2) Диктуйте цифры и наберите номер на дисковом аппарате. Когда установится связь, в трубке прозвучит шифровка Цезаря — расшифруйте секретное слово вместе! 🕵️‍♂️🥭
+            </div>
+
+            <!-- ШАГ 1: БОТАНИЧЕСКИЙ РЕБУС НА 5 ЦИФР -->
+            <div id="riddle-stage-box" class="riddle-panel">
+                <h3 style="margin: 0 0 12px 0; color: #d95d1e; font-size: 16px;">🧩 Вычислите 5 цифр номера лаборатории:</h3>
+                <ul class="riddle-clues-list">
+                    <li><strong>1-я цифра:</strong> Количество букв в слове «ТРОПИКИ».</li>
+                    <li><strong>2-я цифра:</strong> Сколько сотен лет может жить манговое дерево (до ...00 лет)?</li>
+                    <li><strong>3-я цифра:</strong> Самая большая однозначная цифра.</li>
+                    <li><strong>4-я цифра:</strong> Сколько крупных плоских косточек внутри одного плода манго?</li>
+                    <li><strong>5-я цифра:</strong> Количество букв в слове «МАНГО».</li>
+                </ul>
+                <button class="time-btn" style="background: #d95d1e; color: #fff; border-color: #d95d1e; padding: 10px 20px; font-size: 14px;" onclick="openTropicalPhone()">📞 Перейти к телефону</button>
+            </div>
+
+            <!-- ШАГ 2: КРУГЛЫЙ ТРОПИЧЕСКИЙ ТЕЛЕФОН (изначально скрыт) -->
+            <div id="phone-stage-box" class="tropical-phone-zone" style="display: none;">
+                <div id="phone-thoughts" class="phone-thought-card">
+                    «Так, мы вычислили 5 цифр... Наберём их на лабораторном аппарате по порядку!»
+                </div>
+
+                <!-- Табло набора номера -->
+                <div id="mango-number-display" class="phone-lcd-screen">_ _ _ _ _</div>
+
+                <!-- Круглый корпус телефона -->
+                <div class="tropical-dial-body">
+                    <div class="dial-keypad-grid">
+                        <button class="mango-num-btn" onclick="pressMangoNum('1')">1</button>
+                        <button class="mango-num-btn" onclick="pressMangoNum('2')">2</button>
+                        <button class="mango-num-btn" onclick="pressMangoNum('3')">3</button>
+                        <button class="mango-num-btn" onclick="pressMangoNum('4')">4</button>
+                        <button class="mango-num-btn" onclick="pressMangoNum('5')">5</button>
+                        <button class="mango-num-btn" onclick="pressMangoNum('6')">6</button>
+                        <button class="mango-num-btn" onclick="pressMangoNum('7')">7</button>
+                        <button class="mango-num-btn" onclick="pressMangoNum('8')">8</button>
+                        <button class="mango-num-btn" onclick="pressMangoNum('9')">9</button>
+                        <button class="mango-num-btn" style="grid-column: span 3; width: 100%; border-radius: 25px;" onclick="pressMangoNum('0')">0</button>
+                    </div>
+                </div>
+
+                <!-- ШАГ 3: ОТВЕТ В ТРУБКЕ И ШИФР ЦЕЗАРЯ -->
+                <div id="mango-call-result" class="call-cipher-box" style="display: none;">
+                    <p style="color: #2b7a3d; font-weight: bold; margin: 0 0 8px 0;">[ 📡 СОЕДИНЕНИЕ С ЭКСПЕДИЦИЕЙ УСТАНОВЛЕНО ]</p>
+                    <p style="font-size: 14.5px; color: #3d2b1f; font-style: italic; margin: 0 0 12px 0;">
+                        «Приём! Мы нашли редчайший дикий сорт! Его секретное название зашифровано сдвигом на <strong>+1 букву вперёд</strong> по алфавиту: <strong style="color: #d95d1e; font-size: 17px; letter-spacing: 2px;">БМЭХПОТП</strong>. Расшифруйте слово!»
+                    </p>
+
+                    <div class="cipher-helper-strip">
+                        💡 Подсказка Цезаря: каждая буква сдвинута на 1 шаг вперёд (например: Б → А, В → Б, Г → В).
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 12px; width: 100%;">
+                        <input type="text" id="cipher-answer-input" class="cipher-text-field" placeholder="Введи расшифрованное слово...">
+                        <button class="time-btn" style="background: #2b7a3d; color: #fff;" onclick="checkCaesarWord()">Проверить</button>
+                    </div>
+                    <p id="cipher-verdict-msg" style="margin: 10px 0 0 0; font-weight: bold; font-size: 14px;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- СТИЛИ ДЛЯ РЕБУСА И ТРОПИЧЕСКОГО ТЕЛЕФОНА -->
+    <style>
+        .riddle-panel {
+            background: #fff9ee;
+            border: 2px solid #f4c07a;
+            border-radius: 20px;
+            padding: 18px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .riddle-clues-list {
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #4a3525;
+            padding-left: 20px;
+            margin: 0 0 16px 0;
+        }
+        .tropical-phone-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .phone-thought-card {
+            background: #fff4df;
+            border: 1.5px solid #e08e36;
+            border-radius: 16px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-style: italic;
+            color: #5c3d24;
+            margin-bottom: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .phone-lcd-screen {
+            background: #2b4c32;
+            color: #a8ff78;
+            font-family: monospace;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 6px;
+            padding: 10px 24px;
+            border-radius: 14px;
+            border: 3px solid #1b3320;
+            margin-bottom: 16px;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.4);
+        }
+        .tropical-dial-body {
+            width: 260px;
+            height: 260px;
+            background: linear-gradient(145deg, #f4a261, #e76f51);
+            border-radius: 50%;
+            border: 8px solid #b55d35;
+            box-shadow: 0 12px 25px rgba(181, 93, 53, 0.3), inset 0 4px 12px rgba(255,255,255,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            box-sizing: border-box;
+        }
+        .dial-keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .mango-num-btn {
+            width: 50px;
+            height: 50px;
+            background: #fffdf9;
+            border: 2px solid #8c4a27;
+            color: #4a3525;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            transition: all 0.15s ease;
+        }
+        .mango-num-btn:hover {
+            background: #ffd166;
+            transform: scale(1.08);
+        }
+        .mango-num-btn:active {
+            transform: scale(0.92);
+        }
+        .call-cipher-box {
+            margin-top: 20px;
+            background: #f1f8e9;
+            border: 2px dashed #2b7a3d;
+            border-radius: 20px;
+            padding: 18px;
+            width: 100%;
+            box-sizing: border-box;
+            animation: fadeInBlock 0.5s ease;
+        }
+        @keyframes fadeInBlock {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .cipher-helper-strip {
+            background: #ffffff;
+            border: 1px solid #aed581;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 12.5px;
+            color: #334d2b;
+        }
+        .cipher-text-field {
+            flex: 1;
+            padding: 9px 12px;
+            border-radius: 12px;
+            border: 1.5px solid #81c784;
+            font-size: 14px;
+            outline: none;
+        }
+    </style>
+    <div class="mango-separator"><span>✨</span><span>🥭</span><span>✨</span><span>🌿</span><span>✨</span><span>🌞</span><span>✨</span></div>
+
+    <!-- ==================== БЛОК 6: АУКЦИОН ГАРАЖЕЙ ==================== -->
+    <div class="lab-block">
+        <div class="lab-card">
+            <h2>🏚️ Аукцион гаражей: Что сделано из манго?</h2>
+
+            <div class="instruction-box">
+                📜 Инструкция к аукциону:<br>
+                У вас есть стартовый бюджет — <strong>1200 монет</strong>! По очереди открываются лоты с закрытыми гаражами. Читайте табличку, из какой части мангового дерева сделаны вещи внутри, и решайте всем классом: <strong>купить</strong> гараж или <strong>пропустить</strong> (если боитесь уйти в минус). После покупки ворота поднимутся и покажут реальную стоимость предметов! 💰
+            </div>
+
+            <!-- Табло бюджета класса -->
+            <div class="auction-wallet-bar">
+                💰 Бюджет класса: <span id="auction-budget-val">1200</span> монет
+                <span class="lot-counter-pill" id="auction-lot-counter">Лот 1 / 5</span>
+            </div>
+
+            <!-- Карточка текущего гаража -->
+            <div id="garage-stage-box" class="garage-container">
+                <div class="garage-roof"></div>
+                <div id="garage-door-panel" class="garage-door">
+                    <div id="garage-sign-plate" class="garage-sign">
+                        <strong id="garage-lot-title">Гараж №1: Изделия из ДРЕВЕСИНЫ манго</strong>
+                        <span id="garage-lot-price" class="garage-price-tag">Цена лота: 450 монет</span>
+                    </div>
+                </div>
+
+                <!-- Содержимое гаража (появляется после покупки) -->
+                <div id="garage-loot-reveal" class="garage-loot-box" style="display: none;"></div>
+            </div>
+
+            <!-- Кнопки голосования класса -->
+            <div id="auction-action-btns" class="auction-controls">
+                <button class="time-btn" style="background: #2b7a3d; color: #fff; flex: 1; padding: 12px;" onclick="buyCurrentGarage()">💰 Купить гараж</button>
+                <button class="time-btn" style="background: #e08e36; color: #fff; border-color: #e08e36; flex: 1; padding: 12px;" onclick="skipCurrentGarage()">⏭️ Пропустить лот</button>
+            </div>
+
+            <button id="next-garage-btn" class="time-btn" style="display: none; width: 100%; margin-top: 12px; background: #d95d1e; color: #fff;" onclick="loadNextGarage()">➡️ Следующий гараж</button>
+        </div>
+    </div>
+
+    <div class="mango-separator"><span>✨</span><span>🥭</span><span>✨</span><span>🌿</span><span>✨</span><span>🌞</span><span>✨</span></div>
+
+    <!-- ==================== БЛОК 7: СЮЖЕТНЫЙ КВЕСТ-РАЗВИЛКА ==================== -->
+    <div class="lab-block">
+        <div class="lab-card">
+            <h2>🗺️ Сюжетная игра: Два пути манго</h2>
+
+            <div id="quest-screen-box" class="quest-panel">
+                <p id="quest-story-text" class="quest-narrative">
+                    Весь 5 класс отправляется в большое тропическое приключение! В этой истории нет неправильных ответов — каждый ваш выбор меняет сюжет и ведёт к одной из 6 уникальных концовок. Кем вы станете сегодня?
+                </p>
+
+                <div id="quest-choices-row" class="quest-buttons-col">
+                    <button class="quest-choice-btn" onclick="chooseQuestNode('jungle_1')">🌿 Путь А: Ботаник-исследователь в диких джунглях Индии</button>
+                    <button class="quest-choice-btn" onclick="chooseQuestNode('farm_1')">🚜 Путь Б: Владелец солнечной тропической эко-фермы</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== БЛОК 8: ФИНАЛ (ФУТЕР) ==================== -->
+    <footer class="mango-footer">
+        <div class="mango-separator" style="margin: 0 0 14px 0;"><span>✨</span><span>🥭</span><span>✨</span><span>🌿</span><span>✨</span><span>🌞</span><span>✨</span></div>
+        <p style="color: #d95d1e; font-size: 16px; font-weight: bold; margin: 0 0 6px 0;">Спасибо за внимание! Природа полна удивительных открытий! 🥭🌿</p>
+        <p style="color: #7a5840; font-size: 13px; margin: 0;">Сделано с любовью, Люба ✨ 2026</p>
+    </footer>
+
+    <!-- СТИЛИ ДЛЯ АУКЦИОНА ГАРАЖЕЙ, КВЕСТА И ФУТЕРА -->
+    <style>
+        .auction-wallet-bar {
+            width: 100%;
+            background: #fff4df;
+            border: 2px solid #f4c07a;
+            border-radius: 16px;
+            padding: 12px 16px;
+            box-sizing: border-box;
+            font-size: 16px;
+            font-weight: bold;
+            color: #5c3d24;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .lot-counter-pill {
+            background: #d95d1e;
+            color: #ffffff;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+        .garage-container {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        .garage-roof {
+            width: 100%;
+            height: 18px;
+            background: #b55d35;
+            border-radius: 14px 14px 0 0;
+        }
+        .garage-door {
+            width: 100%;
+            min-height: 135px;
+            background: repeating-linear-gradient(0deg, #9e9e9e 0px, #bdbdbd 14px, #757575 16px);
+            border: 3px solid #616161;
+            border-top: none;
+            border-radius: 0 0 16px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+            transition: all 0.4s ease;
+        }
+        .garage-sign {
+            background: #fffdf9;
+            border: 2.5px solid #3d2b1f;
+            border-radius: 14px;
+            padding: 14px 18px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .garage-price-tag {
+            color: #d95d1e;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        .garage-loot-box {
+            background: #f1f8e9;
+            border: 2px solid #81c784;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: left;
+            font-size: 14px;
+            color: #2b4c32;
+            animation: fadeInBlock 0.4s ease;
+        }
+        .auction-controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        /* Блок 7: Сюжетный квест */
+        .quest-panel {
+            background: #fff9ee;
+            border: 2px solid #f4c07a;
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .quest-narrative {
+            font-size: 15px;
+            line-height: 1.65;
+            color: #4a3525;
+            margin: 0 0 18px 0;
+        }
+        .quest-buttons-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+        .quest-choice-btn {
+            background: #ffffff;
+            border: 2px solid #2b7a3d;
+            border-radius: 16px;
+            padding: 13px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #2b7a3d;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+        .quest-choice-btn:hover {
+            background: #2b7a3d;
+            color: #ffffff;
+            transform: translateX(4px);
+        }
+
+        .mango-footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 15px 20px 0 20px;
+        }
+    </style>
+<script>
+    // 1. МАШИНА ВРЕМЕНИ (БЛОК 2)
+    const treeErasData = [
+        { svg: `<ellipse cx="130" cy="175" rx="14" ry="8" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2"/><path d="M 130 183 Q 128 192 132 198" stroke="#fff9c4" stroke-width="3" fill="none"/>`, fact: "<strong>🌱 1 неделя (Пробуждение косточки):</strong> Из крупной плоской косточки первым делом пробивается мощный стержневой корень. Он уходит глубоко в почву, чтобы закрепить будущий гигант и добывать воду." },
+        { svg: `<path d="M 130 165 L 130 125" stroke="#8d6e63" stroke-width="4" stroke-linecap="round"/><ellipse cx="116" cy="122" rx="14" ry="6" transform="rotate(-25 116 122)" fill="#d84315"/><ellipse cx="144" cy="122" rx="14" ry="6" transform="rotate(25 144 122)" fill="#e65100"/><ellipse cx="130" cy="112" rx="6" ry="14" fill="#bf360c"/>`, fact: "<strong>🍁 3 месяца (Юный саженец):</strong> Молодые листья манго не зелёные, а красновато-медные. Так дерево защищает нежные ростки от обжигающих лучей тропического солнца!" },
+        { svg: `<path d="M 130 165 L 130 90" stroke="#6d4c41" stroke-width="8" stroke-linecap="round"/><circle cx="112" cy="88" r="22" fill="#388e3c"/><circle cx="148" cy="88" r="22" fill="#388e3c"/><circle cx="130" cy="68" r="26" fill="#43a047"/>`, fact: "<strong>🌿 2 года (Молодое деревце):</strong> Листья окрепли, стали тёмно-зелёными и плотными, как кожа. Ствол утолщается, а корни уходят уже на несколько метров вглубь земли." },
+        { svg: `<path d="M 124 165 L 126 75 L 134 75 L 136 165 Z" fill="#6d4c41"/><circle cx="100" cy="75" r="30" fill="#2e7d32"/><circle cx="160" cy="75" r="30" fill="#2e7d32"/><circle cx="130" cy="52" r="36" fill="#388e3c"/><circle cx="105" cy="65" r="5" fill="#fff59d"/><circle cx="155" cy="68" r="5" fill="#fff59d"/><circle cx="130" cy="35" r="6" fill="#fff59d"/>`, fact: "<strong>🌼 6 лет (Первое цветение):</strong> Дерево выбрасывает огромные метёлки из тысяч мелких цветков! Плодами станет меньше 1%, а опыляют их в основном мухи, муравьи и летучие мыши." },
+        { svg: `<path d="M 120 165 L 123 65 L 137 65 L 140 165 Z" fill="#5d4037"/><circle cx="90" cy="68" r="38" fill="#1b5e20"/><circle cx="170" cy="68" r="38" fill="#1b5e20"/><circle cx="130" cy="44" r="44" fill="#2e7d32"/><ellipse cx="95" cy="78" rx="6" ry="8" fill="#ffb703"/><ellipse cx="165" cy="75" rx="6" ry="8" fill="#fb8500"/><ellipse cx="125" cy="55" rx="6" ry="8" fill="#ffb703"/>`, fact: "<strong>🥭 15 лет (Взрослое дерево):</strong> Могучая раскидистая крона высотой 15–20 метров! В таком возрасте одно дерево приносит до 150–200 килограммов сочных плодов за сезон." },
+        { svg: `<path d="M 112 165 Q 118 110 118 55 L 142 55 Q 142 110 148 165 Z" fill="#4e342e"/><circle cx="75" cy="60" r="46" fill="#1b5e20"/><circle cx="185" cy="60" r="46" fill="#1b5e20"/><circle cx="130" cy="35" r="52" fill="#2e7d32"/><ellipse cx="75" cy="70" rx="7" ry="9" fill="#ffb703"/><ellipse cx="185" cy="68" rx="7" ry="9" fill="#fb8500"/><ellipse cx="115" cy="45" rx="7" ry="9" fill="#ffb703"/>`, fact: "<strong>👑 100+ лет (Дерево-патриарх):</strong> Некоторые манговые деревья в Индии живут по 300 лет, вырастают до 40 метров в высоту и продолжают давать сладкие плоды." }
+    ];
+
+    function setTreeEra(index, btn) {
+        document.getElementById('timeline-tree-svg').innerHTML = treeErasData[index].svg;
+        document.getElementById('era-fact-box').innerHTML = treeErasData[index].fact;
+        document.querySelectorAll('.timeline-btns .time-btn').forEach(b => b.classList.remove('active-time'));
+        if (btn) btn.classList.add('active-time');
+    }
+
+    // 2. СРАВНИТЕЛЬ ГИГАНТОВ (БЛОК 3)
+    const giantsData = {
+        boy: { height: "1,5 м", name: "Пятиклассник", visual: `<div style="font-size:24px;line-height:1;">👦</div>`, speech: "«Ха-ха! Да ты мне даже до нижнего корешка не достаёшь! Ты слишком низкий, а я люблю высоких!» 😎", scared: false },
+        apple: { height: "5 м", name: "Яблоня", visual: `<div style="font-size:36px;line-height:1;">🍎</div>`, speech: "«Ну и малышка! Я выше тебя в восемь раз! Приходи, когда подрастёшь, яблонька!» 😏", scared: false },
+        birch: { height: "20 м", name: "Берёза", visual: `<div style="font-size:62px;line-height:1;">🌳</div>`, speech: "«Неплохо тянешься, берёзка, но до моих 40 метров тебе ещё расти и расти! Я всё равно король!» 👑", scared: false },
+        sequoia: { height: "100 м", name: "Секвойя", visual: `<div style="font-size:125px;line-height:0.9;">🌲</div>`, speech: "«ОЙ-ОЙ-ОЙ! Мамочки, почему эта ёлка упирается в облака?! Я чувствую себя маленьким кустиком!» 😱", scared: true },
+        skyscraper: { height: "150 м", name: "Небоскрёб", visual: `<div style="font-size:145px;line-height:0.9;">🏙️</div>`, speech: "«А-А-А! Что это за каменная башня?! Уберите её немедленно, у меня листья от страха осыпаются!» 🤯", scared: true }
+    };
+
+    function compareWithGiant(key) {
+        const item = giantsData[key];
+        const hTag = document.getElementById('rival-height-tag');
+        hTag.innerText = item.height;
+        hTag.style.opacity = "1";
+        document.getElementById('rival-visual-box').innerHTML = item.visual;
+        document.getElementById('rival-name-tag').innerText = item.name;
+        document.getElementById('mango-speech-bubble').innerText = item.speech;
+
+        const mangoActor = document.getElementById('mango-character');
+        const mouth = document.getElementById('mango-mouth');
+        if (item.scared) {
+            mangoActor.classList.add('scared-shake');
+            mouth.setAttribute('d', 'M 55 62 Q 60 54 65 62');
+        } else {
+            mangoActor.classList.remove('scared-shake');
+            mouth.setAttribute('d', 'M 54 57 Q 60 63 66 57');
+        }
+    }
+
+    // 3. ЦВЕТОВОЙ КАЛЕЙДОСКОП СОРТОВ (БЛОК 4)
+    const mangoSorts = {
+        purple: { title: "💜 Фиолетовый сорт (Пурпурный дракон)", skin: "#7b2cbf", flesh: "#ffb703", fact: "Редкий тропический сорт с яркой фиолетовой кожурой! Внутри оранжевая медовая мякоть с нотками малины. Сладость: 9/10." },
+        yellow: { title: "💛 Лимонный сорт (Атаульфо / Медовое)", skin: "#ffd166", flesh: "#ffe066", fact: "Золотисто-жёлтое манго с самой маленькой плоской косточкой и нежной мякотью без волокон. Сладость: 10/10." },
+        green: { title: "💚 Изумрудный сорт (Кео Савой)", skin: "#52b788", flesh: "#fefae0", fact: "Спелый плод остаётся ярко-зелёным! По вкусу напоминает хрустящее сладкое яблоко. Сладость: 7/10." },
+        red: { title: "❤️ Алый сорт (Томми Аткинс)", skin: "#e63946", flesh: "#fcbf49", fact: "Самый фотогеничный сорт с рубиново-красным бочком и плотной кожурой. Сладость: 8/10." },
+        orange: { title: "🧡 Королевский сорт (Альфонсо)", skin: "#f77f00", flesh: "#ff9f1c", fact: "В Индии его называют «Королём манго» за самый насыщенный аромат. Сладость: 10/10." }
+    };
+    let currentSortKey = 'orange';
+    let isFruitSliced = false;
+
+    function renderMangoFruitSvg() {
+        const sort = mangoSorts[currentSortKey];
+        const holder = document.getElementById('mango-svg-holder');
+        if (!isFruitSliced) {
+            holder.innerHTML = `<svg viewBox="0 0 140 140" width="120" height="120"><path d="M 70 15 C 110 15, 125 65, 105 105 C 88 135, 45 130, 35 95 C 25 60, 40 15, 70 15 Z" fill="${sort.skin}" stroke="#3d2b1f" stroke-width="3"/><path d="M 70 15 Q 75 5 85 8" stroke="#2b7a3d" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`;
+        } else {
+            holder.innerHTML = `<svg viewBox="0 0 180 140" width="160" height="120"><path d="M 65 20 C 30 20, 15 65, 32 102 C 45 128, 72 125, 78 95 L 78 25 Z" fill="${sort.flesh}" stroke="${sort.skin}" stroke-width="5"/><ellipse cx="55" cy="72" rx="11" ry="24" fill="#e6ccb2" stroke="#b08968" stroke-width="2"/><path d="M 102 25 L 102 95 C 108 125, 135 128, 148 102 C 165 65, 150 20, 115 20 Z" fill="${sort.flesh}" stroke="${sort.skin}" stroke-width="5"/></svg>`;
+        }
+    }
+    function pickMangoColor(key) {
+        currentSortKey = key;
+        isFruitSliced = false;
+        renderMangoFruitSvg();
+        document.getElementById('sort-fact-panel').innerHTML = `<strong>${mangoSorts[key].title}</strong><br>${mangoSorts[key].fact}`;
+    }
+    function sliceMangoFruit() { isFruitSliced = !isFruitSliced; renderMangoFruitSvg(); }
+    // 4. РЕБУС, ТЕЛЕФОН И ШИФР ЦЕЗАРЯ (БЛОК 5)
+    let dialedMangoNumber = "";
+    function openTropicalPhone() {
+        document.getElementById('riddle-stage-box').style.display = 'none';
+        document.getElementById('phone-stage-box').style.display = 'flex';
+    }
+    function pressMangoNum(digit) {
+        if (dialedMangoNumber.length < 5) {
+            dialedMangoNumber += digit;
+            const display = document.getElementById('mango-number-display');
+            display.innerText = dialedMangoNumber.padEnd(5, '_').split('').join(' ');
+            if (dialedMangoNumber.length === 5) {
+                if (dialedMangoNumber === "73915") {
+                    document.getElementById('phone-thoughts').innerText = "«Есть! Гудки пошли... Соединение установлено!» 📡";
+                    document.getElementById('mango-call-result').style.display = 'block';
+                } else {
+                    document.getElementById('phone-thoughts').innerText = "«Ой, короткие гудки — номер неверный! Попробуйте снова.» ❌";
+                    setTimeout(() => { dialedMangoNumber = ""; display.innerText = "_ _ _ _ _"; }, 900);
+                }
+            }
+        }
+    }
+    function checkCaesarWord() {
+        const val = document.getElementById('cipher-answer-input').value.trim().toUpperCase();
+        const verdict = document.getElementById('cipher-verdict-msg');
+        if (val === "АЛЬФОНСО") {
+            verdict.style.color = "#2b7a3d";
+            verdict.innerText = "🎉 Браво, 5 класс! Правильный ответ: АЛЬФОНСО!";
+        } else {
+            verdict.style.color = "#d95d1e";
+            verdict.innerText = "🤔 Пока мимо! Сдвиньте каждую букву на 1 шаг назад по алфавиту.";
+        }
+    }
+
+    // 5. АУКЦИОН ГАРАЖЕЙ НА 1200 МОНЕТ (БЛОК 6)
+    let classBudget = 1200;
+    let currentGarageIdx = 0;
+    const garagesList = [
+        { title: "Гараж №1: Изделия из ДРЕВЕСИНЫ манго", cost: 450, items: [{ name: "🎸 Гитара укулеле из массива манго", val: 350 }, { name: "🥗 Резная салатница и доска", val: 220 }, { name: "🪑 Декоративный табурет", val: 180 }] },
+        { title: "Гараж №2: Вещи из ЛИСТЬЕВ манго", cost: 350, items: [{ name: "🎨 Натуральный жёлтый краситель для ткани", val: 120 }, { name: "🍵 Травяной сбор для полоскания", val: 80 }, { name: "🍂 Охапка сухих листьев (сжигать нельзя!)", val: 10 }] },
+        { title: "Гараж №3: Продукты из КОСТОЧКИ манго", cost: 400, items: [{ name: "🧴 Масло манго для кожи и волос", val: 340 }, { name: "🧼 Натуральное ремесленное мыло", val: 190 }, { name: "🌱 Пророщенный саженец редкого сорта", val: 150 }] },
+        { title: "Гараж №4: Товары из МЯКОТИ И КОЖУРЫ", cost: 300, items: [{ name: "🌶️ Специя амчур из зелёного манго", val: 140 }, { name: "🧃 Упаковка мангового нектара", val: 110 }, { name: "🍬 Сушёные дольки манго", val: 160 }] },
+        { title: "Гараж №5: Секретный VIP-контейнер", cost: 500, items: [{ name: "💍 Шкатулка с ручной резьбой", val: 420 }, { name: "🧣 Шёлковый платок с узором «Пейсли»", val: 310 }, { name: "🕯️ Аромасвеча с маслом манго", val: 170 }] }
+    ];
+
+    function buyCurrentGarage() {
+        const lot = garagesList[currentGarageIdx];
+        if (classBudget < lot.cost) { alert("💰 Не хватает монет! Придётся пропустить лот."); return; }
+        classBudget -= lot.cost;
+        let lootTotal = 0;
+        let html = `<p style="margin:0 0 8px 0;font-weight:bold;">🔓 Ворота открыты! Внутри найдено:</p><ul style="margin:0 0 10px 0;padding-left:18px;">`;
+        lot.items.forEach(i => { lootTotal += i.val; html += `<li>${i.name} — <strong>${i.val} монет</strong></li>`; });
+        html += `</ul>`;
+        classBudget += lootTotal;
+        document.getElementById('auction-budget-val').innerText = classBudget;
+        const profit = lootTotal - lot.cost;
+        html += profit >= 0
+            ? `<div style="background:#c8e6c9;padding:8px 12px;border-radius:10px;font-weight:bold;color:#1b5e20;">📈 Вы выиграли +${profit} монет!</div>`
+            : `<div style="background:#ffcdd2;padding:8px 12px;border-radius:10px;font-weight:bold;color:#b71c1c;">📉 Вы ушли в минус на ${profit} монет!</div>`;
+        document.getElementById('garage-door-panel').style.display = 'none';
+        const rev = document.getElementById('garage-loot-reveal');
+        rev.innerHTML = html; rev.style.display = 'block';
+        document.getElementById('auction-action-btns').style.display = 'none';
+        document.getElementById('next-garage-btn').style.display = 'block';
+    }
+
+    function skipCurrentGarage() {
+        const lot = garagesList[currentGarageIdx];
+        let lootTotal = 0; lot.items.forEach(i => lootTotal += i.val);
+        const diff = lootTotal - lot.cost;
+        const rev = document.getElementById('garage-loot-reveal');
+        rev.innerHTML = `<p style="margin:0;">⏭️ Лот пропущен. Внутри было вещей на <strong>${lootTotal} монет</strong> (${diff >= 0 ? 'упущенная выгода +' + diff : 'вы сберегли бюджет от убытка ' + diff + ' монет'}).</p>`;
+        rev.style.display = 'block';
+        document.getElementById('auction-action-btns').style.display = 'none';
+        document.getElementById('next-garage-btn').style.display = 'block';
+    }
+
+    function loadNextGarage() {
+        currentGarageIdx++;
+        if (currentGarageIdx < garagesList.length) {
+            const lot = garagesList[currentGarageIdx];
+            document.getElementById('auction-lot-counter').innerText = `Лот ${currentGarageIdx + 1} / ${garagesList.length}`;
+            document.getElementById('garage-lot-title').innerText = lot.title;
+            document.getElementById('garage-lot-price').innerText = `Цена лота: ${lot.cost} монет`;
+            document.getElementById('garage-door-panel').style.display = 'flex';
+            document.getElementById('garage-loot-reveal').style.display = 'none';
+            document.getElementById('auction-action-btns').style.display = 'flex';
+            document.getElementById('next-garage-btn').style.display = 'none';
+        } else {
+            document.getElementById('garage-stage-box').innerHTML = `<div style="background:#fff4df;border:2px solid #d95d1e;border-radius:18px;padding:20px;text-align:center;"><h3 style="margin:0 0 8px 0;color:#d95d1e;">🏆 Аукцион завершён!</h3><p style="margin:0;font-size:15px;">Итоговый капитал 5 класса: <strong>${classBudget} монет</strong>!</p></div>`;
+            document.getElementById('next-garage-btn').style.display = 'none';
+        }
+    }
+    // 6. СЮЖЕТНЫЙ КВЕСТ-РАЗВИЛКА (БЛОК 7)
+    const questNodes = {
+        jungle_1: { text: "🌿 Вы выбрали путь ботаников в джунглях Индии! Перед вами дикое манговое дерево высотой 35 метров. Что изучим?", choices: [{ label: "🌸 Подняться к цветущим ветвям и посмотреть, кто их опыляет", next: "jungle_2a" }, { label: "🌱 Раскопать почву у корней и найти проросшие косточки", next: "jungle_2b" }] },
+        jungle_2a: { text: "🦇 Вокруг цветков кружат тропические мухи и летучие мыши! Начался муссонный ливень. Куда направимся?", choices: [{ label: "🏕️ Разбить лагерь под густой непромокаемой кроной", next: "end_1" }, { label: "🧭 Пройти по древней тропе к водопаду", next: "end_2" }] },
+        jungle_2b: { text: "🌱 У корней вы нашли ростки с красно-медными листьями! Рядом виднеется старая хижина лесничего.", choices: [{ label: "📓 Заглянуть в хижину и изучить старинные записи", next: "end_2" }, { label: "🧪 Аккуратно взять образец ростка для школы", next: "end_3" }] },
+        farm_1: { text: "🚜 Вы стали владельцами солнечной эко-фермы! На что сделает ставку ваш 5 класс?", choices: [{ label: "🥭 Выращивать гигантские сладкие плоды на продажу", next: "farm_2a" }, { label: "🪵 Создавать изделия из древесины и масла манго", next: "farm_2b" }] },
+        farm_2a: { text: "🌞 Деревья дали богатый урожай в 200 кг с каждого ствола! Как распорядимся плодами?", choices: [{ label: "🚢 Отправить партию на международную выставку", next: "end_4" }, { label: "🍹 Открыть кафе со свежевыжатым соком и мороженым", next: "end_5" }] },
+        farm_2b: { text: "🪚 Мастерская работает полным ходом! Что представим на школьной ярмарке?", choices: [{ label: "🎸 Коллекцию гитар укулеле и резных шкатулок", next: "end_6" }, { label: "🧴 Натуральную эко-косметику с маслом манго", next: "end_5" }] },
+        end_1: { ending: true, title: "🏅 Концовка 1: Хранители тропической рощи", text: "Густая крона спасла экспедицию от ливня! Вы составили лучший атлас ночных опылителей." },
+        end_2: { ending: true, title: "📜 Концовка 2: Открыватели древнего сорта", text: "В хижине у водопада вы нашли карту 200-летнего дерева-патриарха и описали редкий медовый сорт!" },
+        end_3: { ending: true, title: "🔬 Концовка 3: Юные селекционеры", text: "Вы привезли саженец с медными листьями в школьную оранжерею и вырастили своё деревце!" },
+        end_4: { ending: true, title: "👑 Концовка 4: Чемпионы мировой выставки", text: "Ваши плоды покорили жюри невероятным ароматом! Эко-ферма 5 класса получила золотую медаль!" },
+        end_5: { ending: true, title: "🍹 Концовка 5: Создатели легендарного бренда", text: "Ваше тропическое кафе и эко-продукты прославились на весь мир!" },
+        end_6: { ending: true, title: "🎨 Концовка 6: Мастера золотых рук", text: "Гитары укулеле и шкатулки из мангового дерева стали хитом ярмарки!" }
+    };
+
+    function chooseQuestNode(nodeKey) {
+        const node = questNodes[nodeKey];
+        const screen = document.getElementById('quest-screen-box');
+        if (node.ending) {
+            screen.innerHTML = `<div style="background:#e8f5e9;border:2px solid #2b7a3d;border-radius:18px;padding:18px;text-align:center;"><h3 style="margin:0 0 10px 0;color:#2b7a3d;">${node.title}</h3><p style="margin:0 0 16px 0;font-size:14.5px;line-height:1.6;color:#2b4c32;">${node.text}</p><button class="time-btn" style="background:#d95d1e;color:#fff;border-color:#d95d1e;" onclick="resetQuest()">🔄 Сыграть ещё раз</button></div>`;
+        } else {
+            let btnsHtml = '';
+            node.choices.forEach(c => { btnsHtml += `<button class="quest-choice-btn" onclick="chooseQuestNode('${c.next}')">${c.label}</button>`; });
+            screen.innerHTML = `<p class="quest-narrative">${node.text}</p><div class="quest-buttons-col">${btnsHtml}</div>`;
+        }
+    }
+
+    function resetQuest() {
+        document.getElementById('quest-screen-box').innerHTML = `<p class="quest-narrative">Весь 5 класс отправляется в большое тропическое приключение! В этой истории нет неправильных ответов — каждый ваш выбор меняет сюжет и ведёт к одной из 6 уникальных концовок. Кем вы станете сегодня?</p><div class="quest-buttons-col"><button class="quest-choice-btn" onclick="chooseQuestNode('jungle_1')">🌿 Путь А: Ботаник-исследователь в диких джунглях Индии</button><button class="quest-choice-btn" onclick="chooseQuestNode('farm_1')">🚜 Путь Б: Владелец солнечной тропической эко-фермы</button></div>`;
+    }
+</script>
+</body>
+</html>
